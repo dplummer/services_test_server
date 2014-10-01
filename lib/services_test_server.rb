@@ -21,6 +21,18 @@ module ServicesTestServer
   def self.logger=(logger)
     @logger = logger
   end
+
+  def self.url
+    "druby://localhost:#{control_port}"
+  end
+
+  def self.start
+    DbController.only_one_connection
+
+    DRb.start_service(url, DbController.new)
+    logger.info "DbController service started on #{url}"
+  end
+
 end
 
 require 'services_test_server/version'
